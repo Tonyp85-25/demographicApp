@@ -1,18 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {fetchCountries} from '../actions/index';
+import {fetchCountries,fetchRateExchange} from '../actions/index';
 
-const SearchBar = props => {
-  useEffect(() => {
-    props.fetchCountries();
-    return () => {};
-  }, []);
+const lodash = require('lodash')
 
-  const renderSelectCountries = () => {
+const SearchBar = ({ countries,fetchCountries,fetchRateExchange}) => {
+   
+  const renderSelectCountries = (countries=[]) => {
     return (
       <div className="inline-block relative w-64">
-        <select className="block appearance-none w-full rounded bg-teal-300 border border-gray-200 shadow-lg text-indigo-700 hover:text-white py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 focus:text-black">
-          {props.countries.map(c => (
+        <select onChange={e => onChangeCountry(e)} className="block appearance-none w-full rounded bg-teal-300 border border-gray-200 shadow-lg text-indigo-700 hover:text-white py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 focus:text-black">
+          {countries.map(c => (
             <option className="" key={c.code} value={c.code}>
               {c.name}
             </option>
@@ -29,8 +27,21 @@ const SearchBar = props => {
       </div>
     );
   };
+  const onChangeCountry = e => {
+    const countryCode = e.target.value
+   const country = lodash.find(countries,{code: countryCode})
+   fetchRateExchange(country)
+  }
 
-  return <form>{renderSelectCountries()}</form>;
+  useEffect(() => {
+    let loaded = true
+   if(loaded) fetchCountries();
+  return () => {
+     return loaded =false
+  };
+},[]);
+
+  return <form>{renderSelectCountries(countries)}</form>;
 };
 
 const mapStateToProps = store => {
@@ -39,7 +50,7 @@ const mapStateToProps = store => {
   };
 };
 const mapDispatchToProps = {
-  fetchCountries,
-};
-connect(mapStateToProps, mapDispatchToProps)(SearchBar);
-export default SearchBar;
+  fetchCountries, fetchRateExchange
+}
+const SearchContainer =  connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default SearchContainer;

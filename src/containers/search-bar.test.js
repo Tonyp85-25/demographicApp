@@ -6,7 +6,7 @@ import {act} from 'react-dom/test-utils'
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 import {render, screen} from '@testing-library/react';
-import SearchBar from './search-bar';
+import SearchContainer from './search-bar';
 
 // jest.mock('axios');
 
@@ -17,7 +17,7 @@ import SearchBar from './search-bar';
 //     return fetchCountries().then(d)
 // })
 const mockStore = configureStore([]);
-describe('components > Search-bar', () => {
+describe('components > SearchContainer', () => {
     let component;
     let store;
   
@@ -29,17 +29,21 @@ describe('components > Search-bar', () => {
         
       });
    
-      // component = renderer.create(
-      //   <Provider store={store}>
-      //     <SearchBar/>
-      //   </Provider>
-     // );
+      component = renderer.create(
+        <Provider store={store}>
+          <SearchContainer/>
+        </Provider>
+     );
     });
     it('renders without crashing', () => {
         const div = document.createElement('div');
         act(()=>{
-          render(<Search-bar/>, div);
+          render(<Provider store={store}><SearchContainer/></Provider>, div);
         })
         
-      });
+    });
+    it('should render with given state from Redux store', () => {
+      expect(component.toJSON()).toMatchSnapshot();
+    });
+
 });

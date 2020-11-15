@@ -1,11 +1,13 @@
 import React from 'react';
-import SearchBar from '../containers/search-bar';
+import SearchContainer from '../containers/search-bar';
+import RateList from '../containers/rateList'
 
 function App() {
   return (
     <div>
       <h1>Demographic App</h1>
-      <SearchBar />
+      <SearchContainer/>
+      <RateList/>
     </div>
   );
 }

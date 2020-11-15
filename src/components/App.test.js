@@ -20,18 +20,20 @@ describe('components > App', () => {
       
     });
  
-    // component = renderer.create(
-    //   <Provider store={store}>
-    //     <App/>
-    //   </Provider>
-    // );
+    component = renderer.create(
+      <Provider store={store}>
+        <App/>
+      </Provider>
+    );
   });
 
   it('renders without crashing', () => {
     act(()=>{
-      render(<App />);
+      render(<Provider store={store}>
+        <App/>
+      </Provider>);
     });
-    const textElement = screen.getByText('Demographic App');
+    const textElement = screen.getByText(/Demographic App/);
     expect(textElement).toBeInTheDocument();
   });
   
